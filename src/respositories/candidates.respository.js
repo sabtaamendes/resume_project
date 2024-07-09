@@ -18,10 +18,11 @@ async function getCandidateById(id) {
 }
 
 async function post(data) {
-    console.log(data, 'DATAAAA');
     try {
-        const insertUser = await connection.query('INSERT INTO candidates (fullname, email, phone) VALUES ($1, $2, $3) RETURNING id;', [data.fullname, data.email, data.phone]);
-        console.log(insertUser.rows[0].id, "IDDDD");
+        const insertUser = await connection.query(`
+            INSERT INTO candidates (fullname, email, phone) VALUES ($1, $2, $3) RETURNING id;`,
+            [data.fullname, data.email, data.phone]);
+
         const userId = insertUser.rows[0].id;
 
         await connection.query(`

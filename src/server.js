@@ -11,5 +11,5 @@ server.use(express.json());
 server.use(candidates);
 
 const port = process.env.PORT
-console.log(port, 'PORT')
+
 server.listen(port, () => { console.log(`Listening on port ${port}`) });
