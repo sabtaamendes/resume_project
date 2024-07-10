@@ -1,34 +1,32 @@
 import repositoryCandidates  from "../respositories/candidates.respository.js";
 import fs from 'fs';
 
-export async function getCandidates(req, res) {
-    try {
-        const results = await repositoryCandidates.get(); // Supondo que repositoryCandidates.get() retorna os candidatos
 
-        if (!Array.isArray(results) || results.length === 0) {
-            return res.status(404).send({ error: 'Nenhum candidato encontrado' });
-        }
+export async function getCandidates (req, res) {
+    const result = await repositoryCandidates.getCandidates();
+    res.send(result);
+};
 
-        results.forEach(candidate => {
-            const fileBuffer = Buffer.from(candidate.pdf, 'base64'); // Converte o base64 para Buffer
-            res.write(fileBuffer); // Escreve o conteúdo do arquivo na resposta
-        });
 
-        res.end(); // Finaliza a resposta após enviar todos os arquivos
-
-    } catch (error) {
-        console.error('Erro ao buscar candidatos:', error);
-        res.status(500).send({ error: 'Erro ao buscar candidatos' });
-    }
-}
 
 export async function getCandidateById (req, res) {
     const userId = req.params.id;
 
     try {
-        const result = await repositoryCandidates.getCandidateById(userId);
+        const result = await repositoryCandidates.getCandidateById({userId});
+        console.log(result, 'RESULT')
+        if (!result || !result[0].pdf ) {
+            return res.status(404).send({ error: 'PDF não encontrado para o candidato' });
+        }
 
-        res.send(result);
+        const pdfBuffer = Buffer.from(result[0].pdf, 'base64');
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': `attachment; filename="${result[0].filename}"`,
+        });
+
+        res.send( pdfBuffer);
     } catch (error) {
         console.error('Erro ao executar a consulta:', error);
         res.status(404).send('Erro ao obter usuário');

@@ -10,9 +10,13 @@ async function get() {
     }
 }
 
-async function getCandidateById(id) {
+async function getCandidateById(data) {
+    console.log(data.userId, 'IDD')
     try {
-        const result = await connection.query('SELECT * FROM candidates WHERE id = $1;', [id]);
+        const result = await connection.query(
+          `SELECT * FROM candidates JOIN resume ON candidates.id = resume.candidates_id WHERE candidates.id = $1;`,
+          [data.userId]
+        );
         return result.rows;
     } catch (error) {
         console.log(error);
