@@ -2,7 +2,7 @@ import connection from "../config/db.js";
 async function get() {
     try {
         const result = await connection.query(
-            `SELECT * FROM candidates JOIN resume ON candidates.id = resume.candidates_id;`
+            `SELECT * FROM candidates;`
         );
         return result.rows;
     } catch (error) {
@@ -10,13 +10,16 @@ async function get() {
     }
 }
 
-async function getCandidateById(data) {
-    console.log(data.userId, 'IDD')
+async function getPdfByIdCandidate(data) {
     try {
         const result = await connection.query(
           `SELECT * FROM candidates JOIN resume ON candidates.id = resume.candidates_id WHERE candidates.id = $1;`,
           [data.userId]
         );
+
+        if(result.rows.length === 0) {
+            return { error: 'Candidato não encontrado.' };
+        }
         return result.rows;
     } catch (error) {
         console.log(error);
@@ -24,7 +27,6 @@ async function getCandidateById(data) {
 }
 
 async function post(data) {
-    console.log(data, "DATA POST")
     try {
         const insertUser = await connection.query(`
             INSERT INTO candidates (fullname, email, phone) VALUES ($1, $2, $3) RETURNING id;`,
@@ -43,7 +45,7 @@ async function post(data) {
 
 const repositoryCandidates = {
     get,
-    getCandidateById,
+    getPdfByIdCandidate,
     post
 }
 

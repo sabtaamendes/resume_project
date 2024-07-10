@@ -3,18 +3,22 @@ import fs from 'fs';
 
 
 export async function getCandidates (req, res) {
-    const result = await repositoryCandidates.getCandidates();
-    res.send(result);
+    
+    try {
+        const result = await repositoryCandidates.get();
+        res.send(result);  
+    } catch (error) {
+        console.log(error)
+    }
 };
 
 
 
-export async function getCandidateById (req, res) {
+export async function getPdfByIdCandidate (req, res) {
     const userId = req.params.id;
 
     try {
-        const result = await repositoryCandidates.getCandidateById({userId});
-        console.log(result, 'RESULT')
+        const result = await repositoryCandidates.getPdfByIdCandidate({userId});
         if (!result || !result[0].pdf ) {
             return res.status(404).send({ error: 'PDF não encontrado para o candidato' });
         }
@@ -37,21 +41,16 @@ export async function postJobsCandidates(req, res) {
     console.log(req.body);
     const { fullname, email, phone, desired_position } = req.body;
     const file = req.file;
-    console.log(file, 'FILE PDF'); 
-
 
     try {
         if (!file){
             res.status(400).send('Arquivo não enviado');
             return;
         }
-        // const { originalname, buffer, mimetype } = req.file;
 
-        // await repositoryCandidates.post({fullname, email, phone, desired_position, originalname, buffer, mimetype});
         const { originalname, path } = req.file;
-        console.log(req.file.path, 'PATH PDF');
         const pdf = fs.readFileSync(path);
-        console.log(pdf, 'ARQUIVO PDF');
+
         await repositoryCandidates.post({fullname, email, phone, desired_position, originalname, pdf});
         
         res.status(201).send('Usuário e arquivo PDF salvos com sucesso.');
