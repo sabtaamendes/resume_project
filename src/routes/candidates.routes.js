@@ -5,20 +5,29 @@ import multer from 'multer';
 
 const router = Router();
 
-const storage = multer.memoryStorage();
+// const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-    if (file.mimetype !== 'application/pdf') {
-        return cb(new Error('Only PDFs are allowed'));
+// const fileFilter = (req, file, cb) => {
+//     if (file.mimetype !== 'application/pdf') {
+//         return cb(new Error('Only PDFs are allowed'));
+//     }
+//     cb(null, true);
+// };
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads'); // diretório onde os arquivos serão armazenados temporariamente
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname); // nome do arquivo original
     }
-    cb(null, true);
-};
+});
 
-const upload = multer({ storage: storage, fileFilter: fileFilter });
+const upload = multer({ storage: storage });
 
 
 router.post("/upload", upload.single('file'), validateCandidates, postJobsCandidates);
 router.get("/candidate/:id", getCandidateById);
-router.get("/", getCandidates);
+router.get("/download", getCandidates);
 
 export default router;

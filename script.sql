@@ -11,8 +11,7 @@ CREATE TABLE resume(
     id SERIAL PRIMARY KEY,
     desired_position VARCHAR(50) NOT NULL,
     filename TEXT NOT NULL,
-    data BYTEA NOT NULL,
-    content_type TEXT NOT NULL,
+    pdf BYTEA NOT NULL,
     candidates_id INTEGER NOT NULL REFERENCES candidates(id)
 );
 
