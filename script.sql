@@ -16,5 +16,3 @@ CREATE TABLE resume(
 );
 
 /*BYTEA: armazena dados binários*/
-
-

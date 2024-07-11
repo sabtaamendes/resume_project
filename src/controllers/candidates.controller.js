@@ -19,8 +19,8 @@ export async function getPdfByIdCandidate (req, res) {
 
     try {
         const result = await repositoryCandidates.getPdfByIdCandidate({userId});
-        if (!result || !result[0].pdf ) {
-            return res.status(404).send({ error: 'PDF não encontrado para o candidato' });
+        if (result.error) {
+            return res.status(404).send(result.error);
         }
 
         const pdfBuffer = Buffer.from(result[0].pdf, 'base64');
@@ -32,8 +32,9 @@ export async function getPdfByIdCandidate (req, res) {
 
         res.send( pdfBuffer);
     } catch (error) {
-        console.error('Erro ao executar a consulta:', error);
-        res.status(404).send('Erro ao obter usuário');
+        // console.error('Erro ao executar a consulta:', error);
+
+        res.status(500).send(error);
     }
 };
 
