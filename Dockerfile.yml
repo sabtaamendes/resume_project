@@ -1,21 +1,15 @@
 FROM node:16-alpine
 
-# o docker executa o comando npm install dentro do diretorio /usr/src/app
 WORKDIR /usr/src/app   
 
-# copia o package.json e o package-lock.json para o diretorio /usr/src/app
 COPY package*.json ./ 
 
-# instala as dependências
 RUN npm install
 
-# copia o restante dos arquivos para o diretorio /usr/src/app
 COPY . .
 
-# compila o servidor
 EXPOSE 3000
 
-# executa o servidor
 CMD [ "node", "src/server.js" ]
 
 #comando para construir a imagem
