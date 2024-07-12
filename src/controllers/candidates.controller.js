@@ -43,16 +43,13 @@ export async function getPagination(req, res) {
     const endIndex = page * limit;
   
     const candidates = await repositoryCandidates.get();
-    // Slice the array to return only the candidates for the current page
+
     const results = candidates.slice(startIndex, endIndex);
   
-    // Simulate total count (replace with actual count in real scenario)
     const totalCount = candidates.length;
   
-    // Calculate total pages
     const totalPages = Math.ceil(totalCount / limit);
-  
-    // Return paginated results and metadata
+
     res.json({
       results: results,
       page: page,
