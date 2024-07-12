@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { validateCandidates } from "../middlewares/candidates.middleware.js";
-import { postJobsCandidates, getPdfByIdCandidate, getCandidates } from "../controllers/candidates.controller.js";
+import { postJobsCandidates, getPdfByIdCandidate, getCandidates, getPagination } from "../controllers/candidates.controller.js";
 import multer from 'multer';
 
 const router = Router();
@@ -20,5 +20,6 @@ const upload = multer({ storage: storage });
 router.post("/upload", upload.single('file'), validateCandidates, postJobsCandidates);
 router.get("/candidate/:id", getPdfByIdCandidate);
 router.get("/candidates", getCandidates);
+router.get("/pagination", getPagination);
 
 export default router;

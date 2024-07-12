@@ -12,8 +12,6 @@ export async function getCandidates (req, res) {
     }
 };
 
-
-
 export async function getPdfByIdCandidate (req, res) {
     const userId = req.params.id;
 
@@ -32,11 +30,39 @@ export async function getPdfByIdCandidate (req, res) {
 
         res.send( pdfBuffer);
     } catch (error) {
-        // console.error('Erro ao executar a consulta:', error);
 
         res.status(500).send(error);
     }
 };
+
+export async function getPagination(req, res) {
+
+   const { page = 1, limit = 3 } = req.query;
+   try {
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+  
+    const candidates = await repositoryCandidates.get();
+    // Slice the array to return only the candidates for the current page
+    const results = candidates.slice(startIndex, endIndex);
+  
+    // Simulate total count (replace with actual count in real scenario)
+    const totalCount = candidates.length;
+  
+    // Calculate total pages
+    const totalPages = Math.ceil(totalCount / limit);
+  
+    // Return paginated results and metadata
+    res.json({
+      results: results,
+      page: page,
+      totalPages: totalPages
+    });
+  
+   } catch (error) {
+       console.log(error)
+   }
+}
 
 export async function postJobsCandidates(req, res) {
     console.log(req.body);
