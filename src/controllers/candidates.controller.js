@@ -37,7 +37,7 @@ export async function getPdfByIdCandidate (req, res) {
 
 export async function getPagination(req, res) {
 
-   const { page = 1, limit = 3 } = req.query;
+   const { page = 1, limit = 10 } = req.query;
    try {
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
